@@ -1,4 +1,7 @@
 import PyPDF2
+from openpyxl import Workbook, load_workbook
+from random import randint
+import time
 
 # Initializing all the stuff that I want to find
 NetSales = 0.0
@@ -15,7 +18,7 @@ Refunds = 0.0
 Outgoings = 0.0
 
 # Opens the file to read
-pdfFileobj = open('test2.pdf', 'rb')
+pdfFileobj = open('test.pdf', 'rb')
 
 # Reads the file in
 pdfReader = PyPDF2.PdfFileReader(pdfFileobj)
@@ -91,5 +94,59 @@ DsctStr = DsctStr.split("Re", 1)[0]
 DsctStr = DsctStr.split("$", 1)[1]
 Discounts = float(DsctStr)
 
+
+# Here we write all of the data to the correct column
+# First step is loading and creating the worksheet
+wb = load_workbook('Schnitz EOD WE 11.06.17.xlsx')
+names = wb.sheetnames
+ws = wb.active
+currentDate = time.strftime("%y-%m-%d")
+CellDate = ""
+ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+Count= 1
+
+# Here we idnetify the correct cells to write to, by matching to the current date.
+for i in range(0, 7):
+    pos = ALPHABET[Count]
+    CellDate = str(ws[pos+'12'].value)
+    CellDate = CellDate.split(" ", 1)[0]
+    CellDate = CellDate.split("20", 1)[1]
+    if CellDate == currentDate:
+        print "SUCCESS", CellDate
+        break
+    Count += 1
+
+ColumnToWrite = ALPHABET[Count]
+# Here we write to the desired column, what we want to write
+ws[ColumnToWrite+'13'] = TotalCash
+ws[ColumnToWrite+'14'] = DebitTotal
+ws[ColumnToWrite+'15'] = MasterCard
+ws[ColumnToWrite+'16'] = Amex
+ws[ColumnToWrite+'17'] = VisaTotal
+ws[ColumnToWrite+'18'] = 0
+ws[ColumnToWrite+'20'] = Outgoings
+ws[ColumnToWrite+'24'] = Customers
+ws[ColumnToWrite+'40'] = NetSales
+ws[ColumnToWrite+'58'] = 0
+ws[ColumnToWrite+'59'] = 0
+ws[ColumnToWrite+'60'] = Discounts
+ws[ColumnToWrite+'61'] = Voids
+ws[ColumnToWrite+'83'] = "None"
+ws[ColumnToWrite+'84'] = "None"
+# This does some nonsense and is really funny, putting randomly generated notes at the bottom coz cbf.
+NightGross = ws[ColumnToWrite+'38']
+Comment = ""
+quietNightComments = ["cleaning", "training new skills", "cleaning back of house", "improving customer interactions"]
+avNightComments = ["to improve customer interactions", "to do extra cleaning out the front", "to sweep outside areas", "to improve wait times"]
+bsyNightComments =
+if NightGross < 600:
+    cmt = quietNightComments[randint[0, 3]]
+    Comment = "Quiet night, focused on " + cmt
+elif NightGross < 800:
+    cmt = 
+    Comment = "Average night, tried " + cmt
+
+ws[ColumnToWrite+'85'] = Comment
+wb.save('Schnitz EOD WE 11.06.17.xlsx')
 # This prints out our results, it will be replaced later
 print "Gross Sales: ", GrossSales, "\nTotal Customers: ", Customers, "\nNet sales: ", NetSales, "\nVisa Total: ", VisaTotal, "\nMasterCard Total: ", MasterCard, "\nAmex Total: ", Amex, "\nCash Total: ", TotalCash, "\nDebit Total:", DebitTotal, "\nOutgoings Total: ", Outgoings, "\nVoids: ", Voids, "\nDiscounts: ", Discounts
