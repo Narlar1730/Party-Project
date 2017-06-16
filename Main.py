@@ -138,13 +138,14 @@ NightGross = ws[ColumnToWrite+'38']
 Comment = ""
 quietNightComments = ["cleaning", "training new skills", "cleaning back of house", "improving customer interactions"]
 avNightComments = ["to improve customer interactions", "to do extra cleaning out the front", "to sweep outside areas", "to improve wait times"]
-bsyNightComments =
 if NightGross < 600:
     cmt = quietNightComments[randint[0, 3]]
     Comment = "Quiet night, focused on " + cmt
 elif NightGross < 800:
-    cmt = 
+    cmt = avNightComments[randint[0, 3]]
     Comment = "Average night, tried " + cmt
+else:
+    Comment = "Busy night"
 
 ws[ColumnToWrite+'85'] = Comment
 wb.save('Schnitz EOD WE 11.06.17.xlsx')
