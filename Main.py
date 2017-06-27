@@ -1,7 +1,18 @@
-import PyPDF2
-from openpyxl import Workbook, load_workbook
-from random import randint
 import time
+from random import randint
+import urllib.request
+
+
+
+import PyPDF2
+from openpyxl import load_workbook
+
+
+
+
+
+
+
 
 # Initializing all the stuff that I want to find
 NetSales = 0.0
@@ -80,7 +91,7 @@ try:
     OutStr = OutStr.split("O", 1)[0]
     Outgoings = float(OutStr)
 except IndexError:
-    print "No Outgoings"
+    print ("No Outgoings")
 
 # Here we extract the total Voids
 VoidStr = page2txt.split("Voids Total", 1)[1]
@@ -94,10 +105,14 @@ DsctStr = DsctStr.split("Re", 1)[0]
 DsctStr = DsctStr.split("$", 1)[1]
 Discounts = float(DsctStr)
 
+# Here we get the information from the internet using HTML scraping. We have to
+# connect to the right page
+
 
 # Here we write all of the data to the correct column
 # First step is loading and creating the worksheet
 wb = load_workbook('Schnitz EOD WE 11.06.17.xlsx')
+
 names = wb.sheetnames
 ws = wb.active
 currentDate = time.strftime("%y-%m-%d")
@@ -149,5 +164,6 @@ else:
 
 ws[ColumnToWrite+'85'] = Comment
 wb.save('Schnitz EOD WE 11.06.17.xlsx')
+
 # This prints out our results, it will be replaced later
 print "Gross Sales: ", GrossSales, "\nTotal Customers: ", Customers, "\nNet sales: ", NetSales, "\nVisa Total: ", VisaTotal, "\nMasterCard Total: ", MasterCard, "\nAmex Total: ", Amex, "\nCash Total: ", TotalCash, "\nDebit Total:", DebitTotal, "\nOutgoings Total: ", Outgoings, "\nVoids: ", Voids, "\nDiscounts: ", Discounts
